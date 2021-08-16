@@ -7,6 +7,7 @@ import struct ## new
 import zlib
 from server_connection import ServerConnection
 import cv2 as cv
+import PIL
 
 
 
@@ -27,6 +28,7 @@ class Server:
             conn,addr=self.con.sock_con.accept()
             print(f"Socket: {conn}, address: {addr}, connect to the Server successfully!")
             self.handle_communication(conn, addr)
+            print('Socket now listening')
 
     def handle_communication(self, conn, addr):
 
@@ -90,8 +92,9 @@ class Server:
 
     def handle_img(self, frame_data):
         print('image received')
-        image = pickle.loads(frame_data)
-        cv.imshow('frame', image)
+        pil_image = pickle.loads(frame_data)
+        opencvImage = cv.cvtColor(np.array(pil_image), cv.COLOR_RGB2BGR)
+        cv.imshow('frame', opencvImage)
         cv.waitKey(1)
         return [True]
         pass
